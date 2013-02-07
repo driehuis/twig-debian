@@ -1,13 +1,13 @@
 Source: twig
-Maintainer: Paul Waring <paul@xk7.net>
+Maintainer: Bert Driehuis <driehuis@playbeing.org>
 Section: misc
 Priority: optional
-Standards-Version: 3.9.3
-Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.1
+Build-Depends: debhelper (>= 7)
 
 Package: twig
 Architecture: all
-Depends: php5 (>= 5.3), ${misc:Depends}
+Depends: php5 (>= 5.3), ${misc:Depends}, twig-bin
 Description: Flexible, fast, and secure template engine for PHP 
  Fast: Twig compiles templates down to plain optimized PHP code.
  The overhead compared to regular PHP code was reduced to the very minimum.
@@ -19,3 +19,9 @@ Description: Flexible, fast, and secure template engine for PHP
  Flexible: Twig is powered by a flexible lexer and parser.
  This allows the developer to define its own custom tags and filters, and
  create its own DSL.
+
+Package: twig-bin
+Architecture: any
+Depends: ${misc:Depends}
+Description: Binary bits for twig (currently, the C code that implements
+ the Twig_Template::getAttribute() optimized method.)

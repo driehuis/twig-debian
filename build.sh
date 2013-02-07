@@ -1,7 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Uncomment for debugging
-set -x
+set -e
+
+# Respawn under bash if not running under bash
+[ -z "$BASH_VERSION" ] && exec bash $0 "$@"
 
 usage()
 {
@@ -11,31 +13,26 @@ cat << EOF
   Downloads the upstream source of the Twig templating language and
   produces a Debian package file (.deb).
 
-  OPTIONS:
-    -v <version> Specify the version of Twig to download (e.g. -v 1.9.2).
+  Takes the version to download from the debian/changelog file
 EOF
 }
 
-while getopts "v:" option
-do
-  case $option in
-    v)
-      VERSION=$OPTARG
-      ;;
-    ?)
-      usage
-      exit 1
-      ;;
-  esac
-done
+set -- `head -1 debian/changelog| sed -e 's/^[^(]*(//' -e 's/).*//' -e 's/-/ -/'`
+VERSION=$1
+DEBIAN_VERSION=$1$2
 
 if [[ -z $VERSION ]]
 then
-  usage
+  echo "debian/changelog does not start with a parseable version number, please fix"
   exit 1
 fi
 
-DEBIAN_VERSION="${VERSION}-1"
+if [[ `grep -cF "($VERSION" debian/changelog` = 0 ]]
+then
+  echo "$VERSION is not listed in debian/changelog"
+  exit 1
+fi
+
 GITHUB_URL="https://github.com/fabpot/Twig/tarball/v${VERSION}"
 PACKAGE_NAME="twig"
 TMP_DIR="/tmp"

@@ -5,7 +5,18 @@ clean:
 	dh_testroot
 	dh_clean
 
-build:
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	cd ext/twig && phpize && ./configure && cd ../..
+	touch configure-stamp
+
+build:	configure-stamp build-stamp
+build-stamp:
+	dh_testdir 
+	cd ext/twig && make && make install-modules INSTALLROOT=../../debian/twig-bin && cd ../..
+	cp -p ext/twig/modules/* debian/twig-bin
+	touch build-stamp
 
 install:
 	dh_testdir
@@ -15,19 +26,32 @@ install:
 	cp -r lib/Twig debian/twig/usr/share/php/twig/
 
 binary-indep: install
-	dh_testdir
-	dh_testroot
-	dh_installdocs
-	dh_installchangelogs
-	dh_install
-	dh_installexamples
-	dh_lintian
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
+	dh_testdir -i
+	dh_testroot -i
+	dh_installdocs -i
+	dh_installchangelogs -i
+	dh_install -i
+	dh_installexamples -i
+	dh_lintian -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
 
-binary: binary-indep
-.PHONY: clean binary-arch binary-indep binary install build-arch build-indep
+binary-arch: build install
+	dh_testdir -a
+	dh_testroot -a
+	dh_link -a
+	dh_strip -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_installdeb -a
+	dh_shlibdeps -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+binary: binary-indep binary-arch
+.PHONY: clean binary-indep binary install build-arch build-indep
