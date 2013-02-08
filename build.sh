@@ -65,5 +65,4 @@ chmod 755 "${EXTRACT_DIR}/debian/rules"
 cd ${EXTRACT_DIR}
 debuild -us -uc
 
-cp ${DEB_FILE} ${CURRENT_DIR}/
-
+cp ${TMP_DIR}/${PACKAGE_NAME}[-_]*.deb ${CURRENT_DIR}/

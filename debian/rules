@@ -14,8 +14,7 @@ configure-stamp:
 build:	configure-stamp build-stamp
 build-stamp:
 	dh_testdir 
-	cd ext/twig && make && make install-modules INSTALLROOT=../../debian/twig-bin && cd ../..
-	cp -p ext/twig/modules/* debian/twig-bin
+	cd ext/twig && make && make install-modules INSTALL_ROOT=../../debian/twig-bin && cd ../..
 	touch build-stamp
 
 install:
