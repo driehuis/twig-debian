@@ -22,6 +22,6 @@ Description: Flexible, fast, and secure template engine for PHP
 
 Package: twig-bin
 Architecture: any
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, ${php:Depends}, ${shlibs:Depends}
 Description: Binary bits for twig (currently, the C code that implements
  the Twig_Template::getAttribute() optimized method.)

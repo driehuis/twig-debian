@@ -13,8 +13,8 @@ configure-stamp:
 
 build:	configure-stamp build-stamp
 build-stamp:
-	dh_testdir 
-	cd ext/twig && make && make install-modules INSTALL_ROOT=../../debian/twig-bin && cd ../..
+	dh_testdir
+	cd ext/twig && make
 	touch build-stamp
 
 install:
@@ -22,7 +22,9 @@ install:
 	dh_testroot
 	dh_prep
 	dh_installdirs
+	cd ext/twig && make install INSTALL_ROOT=../../debian/twig-bin
 	cp -r lib/Twig debian/twig/usr/share/php/twig/
+	echo "php:Depends=phpapi-$(shell php-config --phpapi)" >> debian/twig-bin.substvars
 
 binary-indep: install
 	dh_testdir -i

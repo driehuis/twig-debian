@@ -5,17 +5,34 @@ set -e
 # Respawn under bash if not running under bash
 [ -z "$BASH_VERSION" ] && exec bash $0 "$@"
 
-usage()
-{
-cat << EOF
-  Usage: $0 options
-
-  Downloads the upstream source of the Twig templating language and
-  produces a Debian package file (.deb).
-
-  Takes the version to download from the debian/changelog file
-EOF
+die() {
+	echo "$0:" "$@" >&2
+	echo unknown
+	exit 1
 }
+
+os_rel=
+[ "$os_rel" = "" ] && [ -f /etc/lsb-release ] && os_rel=`grep DISTRIB_CODENAME /etc/lsb-release | cut -d= -f2`
+[ "$os_rel" = "" ] && [ -f /etc/debian_version ] && os_rel=`cat /etc/debian_version`
+[ "$os_rel" = "" ] && die "No Debian version found"
+
+case $os_rel in
+	karmic) ;;
+	lucid) ;;
+	maverick) ;;
+	natty) ;;
+	oneiric) ;;
+	precise) ;;
+	quantal) ;;
+	raring) ;;
+	3.1)	os_rel=sarge ;;
+	4.0)	os_rel=etch ;;
+	5.0*)	os_rel=lenny ;;
+	6.0*)	os_rel=squeeze ;;
+	*) die "Unsupported Debian release $os_rel" ;;
+esac
+
+sed -e "s/\[distro\]/$os_rel/" <debian/changelog.in >debian/changelog
 
 set -- `head -1 debian/changelog| sed -e 's/^[^(]*(//' -e 's/).*//' -e 's/-/ -/'`
 VERSION=$1
@@ -38,7 +55,6 @@ PACKAGE_NAME="twig"
 TMP_DIR="/tmp"
 TAR_FILE="${TMP_DIR}/${PACKAGE_NAME}_${VERSION}.orig.tar.gz"
 EXTRACT_DIR="${TMP_DIR}/${PACKAGE_NAME}-${VERSION}"
-DEB_FILE="${TMP_DIR}/${PACKAGE_NAME}_${DEBIAN_VERSION}_all.deb"
 CURRENT_DIR=${PWD}
 
 if [[ ! -e ${TAR_FILE} ]]
@@ -63,6 +79,12 @@ mkdir -p ${EXTRACT_DIR}/debian/source
 cp -r ${CURRENT_DIR}/debian/* ${EXTRACT_DIR}/debian/
 chmod 755 "${EXTRACT_DIR}/debian/rules"
 cd ${EXTRACT_DIR}
-debuild -us -uc
+
+php_extension_dir=`php-config --extension-dir | sed -e 's/^\///'`
+echo $php_extension_dir >>debian/twig-bin.dirs
+
+#debuild -us -uc
+debuild
 
 cp ${TMP_DIR}/${PACKAGE_NAME}[-_]*.deb ${CURRENT_DIR}/
+rm ${CURRENT_DIR}/debian/changelog

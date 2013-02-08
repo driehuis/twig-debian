@@ -1,4 +1,4 @@
-twig (1.10.0-1) UNRELEASED; urgency=low
+twig (1.10.0-1~[distro]1) UNRELEASED; urgency=low
 
   * Update from github
 
