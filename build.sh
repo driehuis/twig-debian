@@ -32,7 +32,7 @@ case $os_rel in
 	*) die "Unsupported Debian release $os_rel" ;;
 esac
 
-sed -e "s/\[distro\]/$os_rel/" <debian/changelog.in >debian/changelog
+sed -e "s/\[distro\]/$os_rel/g" <debian/changelog.in >debian/changelog
 
 set -- `head -1 debian/changelog| sed -e 's/^[^(]*(//' -e 's/).*//' -e 's/-/ -/'`
 VERSION=$1
