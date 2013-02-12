@@ -84,7 +84,7 @@ php_extension_dir=`php-config --extension-dir | sed -e 's/^\///'`
 echo $php_extension_dir >>debian/twig-bin.dirs
 
 #debuild -us -uc
-debuild
+debuild -S
 
-cp ${TMP_DIR}/${PACKAGE_NAME}[-_]*.deb ${CURRENT_DIR}/
+#cp ${TMP_DIR}/${PACKAGE_NAME}[-_]*.deb ${CURRENT_DIR}/
 rm ${CURRENT_DIR}/debian/changelog

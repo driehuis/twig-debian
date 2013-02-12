@@ -1,3 +1,9 @@
+twig (1.10.0-1~[distro]2) [distro]; urgency=low
+
+  * Add php5-dev to Build-Depends
+
+ -- Bert Driehuis <driehuis@playbeing.org>  Tue, 12 Feb 2013 17:16:32 +0100
+
 twig (1.10.0-1~[distro]1) [distro]; urgency=low
 
   * Update from github
