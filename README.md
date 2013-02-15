@@ -10,8 +10,6 @@ When a new version of Twig is released:
  3. Run build.sh to download and build the package.
  4. Fix any lintian errors/warnings and re-build as necessary.
 
-The build.sh script will create a .deb file in your current directory - this can then
-be installed using dpkg -i <file>.deb.
-
-If installing the package manually, you must ensure that all dependencies have been
-installed beforehand, as dpkg will not automatically resolve them.
+The build.sh script will create a .source.changes file in /tmp.
+Upload this to your launchpad PPA with
+  dput ppa:yourname/ppa /tmp/twig_1.XX.X-1~distribution1_source.changes
